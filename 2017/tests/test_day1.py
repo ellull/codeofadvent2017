@@ -21,3 +21,4 @@ def test_1sthalf(puzzle, output):
 ])
 def test_2ndhalf(puzzle, output):
     assert_equal(solve(puzzle, len(puzzle) / 2), output)
+
