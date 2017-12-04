@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from days.day3.common import manhattan_distance, stress_spiral
+from days.day3.common import spiral, manhattan_distance
 from itertools import islice
 from nose.tools import assert_equal
 from parameterized import parameterized
@@ -23,4 +23,4 @@ def test_manhattan_distance(num, output):
     (23, 806),
 ])
 def test_stress(num, output):
-    assert_equal(next(islice(stress_spiral(), num - 1, num)), output)
+    assert_equal(next(islice(spiral(), num - 1, num)).value, output)

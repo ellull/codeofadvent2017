@@ -1,23 +1,22 @@
 from itertools import count, islice
-from math import sqrt, ceil
 
 class Point:
-    def __init__(self, x, y, n = 0):
-        self.x = x
-        self.y = y
-        self.n = n
-
-    def manhattan_distance(self, other):
-        return abs(self.x - other.x) + abs(self.y - other.y)
-
-    def is_adjacent_to(self, other):
-        return abs(self.x - other.x) <= 1 and abs(self.y - other.y) <= 1
+    def __init__(self, x, y, value = 0):
+        self._x = x
+        self._y = y
+        self.value = value
 
     def __add__(self, other):
-        return Point(self.x + other.x, self.y + other.y)
+        return Point(self._x + other._x, self._y + other._y)
 
     def __repr__(self):
-        return "Point({self.x:d}, {self.y:d}, {self.n:d})".format(self=self)
+        return "Point({self._x:d}, {self._y:d}, {self.value:d})".format(self=self)
+
+    def manhattan_distance(self, other):
+        return abs(self._x - other._x) + abs(self._y - other._y)
+
+    def is_adjacent_to(self, other):
+        return (self._x - other._x) ** 2 + (self._y - other._y) ** 2 < 4.0
 
 STEPS = (
     Point(1, 0),  # Right
@@ -26,17 +25,16 @@ STEPS = (
     Point(0, -1), # Down
 )
 
-def spiral():
-    return (STEPS[i % 4] for i in count() for j in xrange(i // 2 + 1))
-
-def stress_spiral():
-    points = [Point(0, 0, 1)]
-    for p in spiral():
-        yield points[-1].n
-        point = points[-1] + p
-        point.n = sum(i.n for i in points if point.is_adjacent_to(i))
-        points.append(point)
+def spiral(with_value=False):
+    cell = Point(0, 0, 1)
+    cells = [cell]
+    for step in (STEPS[i % 4] for i in count() for j in xrange(i // 2 + 1)):
+        yield cell
+        cell = cell + step
+        if with_value:
+            cell.value = sum(other.value for other in cells if cell.is_adjacent_to(other))
+            cells.append(cell)
 
 def manhattan_distance(n):
-    return reduce(lambda x, y: x + y, islice(spiral(), n - 1), Point(0, 0)).manhattan_distance(Point(0, 0))
+    return next(islice(spiral(), n - 1, n)).manhattan_distance(Point(0, 0))
 
