@@ -3,11 +3,14 @@ import fileinput
 
 jumps = [int(jump) for jump in fileinput.input()]
 
-clock, pc = 0, 0
+clock, pc, max_pc = 0, 0, 0
 while pc < len(jumps):
     jump = jumps[pc]
     jumps[pc] += 1
     pc += jump
     clock += 1
+    if pc > max_pc:
+        max_pc = pc
+        print("%09d: %04d" % (clock, pc))
 
 print(clock)
