@@ -23,4 +23,4 @@ def test_manhattan_distance(num, output):
     (23, 806),
 ])
 def test_stress(num, output):
-    assert_equal(next(islice(spiral(), num - 1, num)).value, output)
+    assert_equal(next(islice(spiral(with_value=True), num - 1, num)).value, output)
