@@ -41,8 +41,8 @@ def knot_round(lengths, numbers, position, skip):
 
     return numbers, position, skip
 
-def knot_hash(lengths):
-    lengths = list(lengths) + [17, 31, 73, 47, 23]
+def knot_hash(text):
+    lengths = [ord(char) for char in text] + [17, 31, 73, 47, 23]
     numbers, position, skip = CircularList(xrange(256)), 0, 0
     for _ in xrange(64):
         numbers, position, skip = knot_round(lengths, numbers, position, skip)
@@ -57,5 +57,5 @@ if __name__ == '__main__':
     print('Product: %d' % (result[0] * result[1]))
 
     # Second half
-    print('Hash: %s' % knot_hash(ord(char) for char in text))
+    print('Hash: %s' % knot_hash(text))
 

@@ -16,5 +16,5 @@ def test_knot_round(lengths, output):
     ('1,2,4', '63960835bcdc130f0b66d7ff4f6a5a8e'),
 ])
 def test_knot_hash(text, output):
-    assert_equal(knot_hash([ord(char) for char in text]), output)
+    assert_equal(knot_hash(text), output)
 
