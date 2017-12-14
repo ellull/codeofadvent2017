@@ -37,21 +37,17 @@ class Grid(object):
             raise IndexError('(%s, %s): indexes must be between 0 and 127' % (x, y))
         self.blocks[y][x] = val
 
-    def adjacents(self, coords, y = None):
-        if y is not None:
-            coords = [(coords, y)]
+    def adjacents(self, coords):
         return [(xx, yy) for (x, y) in coords for (xx, yy) in ((x - 1, y), (x, y - 1), (x + 1, y), (x, y + 1)) if self.get(xx, yy) is not None]
 
+    # It would have been better to use recursion but as Pyhton does not have
+    # tail-recursion optimization it was raising exceptions
     def flood(self, x, y, group):
-        prev_group = self.get(x, y)
-        self.set(x, y, group)
-
-        pending = lambda (ax, ay): self.get(ax, ay) == prev_group
-        adjacents = filter(pending, self.adjacents(x, y))
+        adjacents, prev_group = [(x, y)], self.get(x, y)
         while len(adjacents) > 0:
             for xx, yy in adjacents:
                 self.set(xx, yy, group)
-            adjacents = filter(pending, self.adjacents(adjacents))
+            adjacents = filter(lambda (ax, ay): self.get(ax, ay) == prev_group, self.adjacents(adjacents))
 
 
 grid = Grid(sys.argv[1])
