@@ -10,7 +10,7 @@ def sparse(bool_list, val):
     return {n: val for (n, bit) in enumerate(bool_list) if bit}
 
 class Grid(object):
-    def __init__(self, seed):
+    def __init__(self, seed, exporter=None):
         # Initialize grid
         print("Populating blocks...")
         self.blocks = {y: sparse(hex_to_bits(knot_hash('%s-%d' % (seed, y))), 0) for y in xrange(128)}
@@ -18,11 +18,13 @@ class Grid(object):
         # Group the blocks
         print("Grouping blocks...")
         self.num_groups = 0
+        exporter.start(self)
         for (y, row) in self.blocks.iteritems():
             for (x, group) in row.iteritems():
                 if group == 0:
+                    exporter.next(self)
                     self.num_groups += 1
-                    self.flood(x, y, self.num_groups)
+                    self.flood(x, y, self.num_groups, exporter.flood)
         
     def __len__(self):
         return sum(len(row) for row in self.blocks.itervalues())
@@ -42,15 +44,18 @@ class Grid(object):
 
     # It would have been better to use recursion but as Pyhton does not have
     # tail-recursion optimization it was raising exceptions
-    def flood(self, x, y, group):
+    def flood(self, x, y, group, callback=None):
         adjacents, prev_group = [(x, y)], self.get(x, y)
         while len(adjacents) > 0:
+            if callback is not None:
+                callback(adjacents, group)
             for xx, yy in adjacents:
                 self.set(xx, yy, group)
             adjacents = filter(lambda (ax, ay): self.get(ax, ay) == prev_group, self.adjacents(adjacents))
 
 
-grid = Grid(sys.argv[1])
-print('Number of blocks: %d' % len(grid))
-print('Number of groups: %d' % grid.num_groups)
+if __name__ == '__main__':
+    grid = Grid(sys.argv[1])
+    print('Number of blocks: %d' % len(grid))
+    print('Number of groups: %d' % grid.num_groups)
 
