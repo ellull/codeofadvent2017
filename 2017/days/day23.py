@@ -49,6 +49,9 @@ if __name__ == '__main__':
     p.run()
     print("%d muls called" % p.muls)
 
-    #p = Program(instructions, 1)
-    #p.run()
-    #print("%d muls called" % p.muls)
+    nonprimes = 0
+    b = (84 * 100) + 100000
+    for b in range(b, b + 17000 + 1, 17):
+        if any(b % d == 0 for d in range(2, int(b**0.5))):
+            nonprimes += 1
+    print('h register value is %d' % nonprimes)
