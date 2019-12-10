@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import fileinput
 from itertools import takewhile
 from typing import (Iterable, Tuple)
